@@ -1,6 +1,7 @@
 import express from 'express'
 import { connectDB } from '*/config/mongodb'
 import { env } from '*/config/environtment'
+import { apiV1 } from '*/routes/v1'
 
 connectDB()
     .then(() => console.log('Connected MongoDB server'))
@@ -12,11 +13,11 @@ connectDB()
 
 const bootServer = () => {
     const app = express()
+//req body data
+    app.use(express.json())
+//use APIs v1
+    app.use('/v1', apiV1)
 
-    app.get('/test', async (req, res) => {
-
-        res.end('<h1>Hello Giang</h1><hr/>')
-    })
 
     app.listen(env.APP_PORT, env.APP_HOST, () => {
         console.log(`Hello Trello-Web ${env.APP_HOST}: ${env.APP_PORT} /`)
