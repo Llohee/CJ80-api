@@ -14,7 +14,7 @@ export const connectDB = async () => {
   await client.connect()
 
   //assign clientDB 
-  dbInstance = client.db(env.DATABASE_NAME)
+  dbInstance = client.db('Trello-Web')    
 }
 //Get Database instance
 export const getDB = () => {
@@ -22,9 +22,3 @@ export const getDB = () => {
   return dbInstance
 }
 
-// const listDatabases = async (client) => {
-//   const databasesList = await client.db().admin().listDatabases()
-//   console.log(databasesList)
-//   console.log('Your database:')
-//   databasesList.databases.forEach(db => console.log(` - ${db.name} `))
-// }

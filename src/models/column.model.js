@@ -11,20 +11,57 @@ const columnCollectionSchema = Joi.object({
   createdAt: Joi.date().timestamp().default(Date.now()),
   updateddAt: Joi.date().timestamp().default(null),
   _destroy: Joi.boolean().default(false)
-
-
 })
 
 const validateSchema = async (data) => {
   return await columnCollectionSchema.validateAsync(data, { abortEarly: false })
 }
 
+const findOneById = async (id) => {
+  try {
+    const result = await getDB().collection(columnCollectionName).findOne({ _id: new ObjectId(id) })
+    return result
+
+  } catch (error) {
+    throw new Error(error)
+
+  }
+}
+
+
+
+
 const createNew = async (data) => {
   try {
-    const value = await validateSchema(data)
-    const result = await getDB().collection(columnCollectionName).insertOne(value)
-    return result.value
+    const validatedValue = await validateSchema(data)
+    const insertValue = {
+      ...validatedValue,
+      boardId: new ObjectId(validatedValue.boardId)
+    }
 
+    const result = await getDB().collection(columnCollectionName).insertOne(insertValue)
+
+    return result
+  } catch (error) {
+    console.log(error)
+    throw new Error(error)
+  }
+}
+
+/**
+ * 
+ * @param {string} columnId 
+ * @param {string} cardId 
+ */
+const pushCardOder = async (columnId, cardId) => {
+  try {
+    const result = await getDB().collection(columnCollectionName).findOneAndUpdate(
+      { _id: new ObjectId(columnId) },
+      { $push: { cardOrder: cardId } },
+      { returnDocument: 'after' }
+    )
+
+    return result
   } catch (error) {
     throw new Error(error)
   }
@@ -32,18 +69,23 @@ const createNew = async (data) => {
 
 const update = async (id, data) => {
   try {
+    const updateData = {
+      ...data,
+    }
+    if (data.boardId) {
+      updateData.boardId = new ObjectId(data.boardId)
+    }
     const result = await getDB().collection(columnCollectionName).findOneAndUpdate(
-      { _id: ObjectId(id) },
-      { $set: data },
-      { returnOriginal: false }
+      { _id: new ObjectId(id) },
+      { $set: updateData },
+      { returnDocument: 'after' }
     )
-    console.log(result)
-    return result.value
+    return result
 
   } catch (error) {
     throw new Error(error)
-  } 
+  }
 }
 
 
-export const ColumnModel = { createNew, update }
+export const ColumnModel = { columnCollectionName, createNew, update, pushCardOder, findOneById }

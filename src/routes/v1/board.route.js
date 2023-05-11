@@ -6,10 +6,10 @@ const router = express.Router()
 
 
 router.route('/')
-  // .get((req, res) => console.log('GET líst board'))
+  // .get((req, res) => console.log('GET list board'))
   .post(BoardValidation.createNew, BoardController.createNew)
 router.route('/:id')
-  // .get((req, res) => console.log('GET líst board'))
-  .get( BoardController.getFullBoard)
+  .get(BoardController.getFullBoard)
+  .put(BoardValidation.update, BoardController.update)
 
 export const boardRoutes = router

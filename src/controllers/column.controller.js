@@ -11,6 +11,7 @@ const createNew = async (req, res) => {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
       errors: error.message
     })
+    console.log(error)
   }
 }
 

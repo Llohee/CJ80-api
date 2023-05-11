@@ -25,5 +25,5 @@ router.use('/columns', columnRoutes)
  *  Card APIs
  */
 router.use('/cards', cardRoutes)
-
+  
 export const apiV1 = router
